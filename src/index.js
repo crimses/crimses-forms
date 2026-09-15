@@ -78,6 +78,19 @@ export default {
       return json({ error: "Faltan campos obligatorios" }, 400, corsHeaders(origin));
     }
 
+    // Cualquier otro campo que tenga el formulario del cliente (rubro,
+    // fecha, dirección, lo que sea) se agrega tal cual al cuerpo del mail,
+    // sin que haga falta tocar este Worker por cada campo nuevo que sumen.
+    const knownFields = new Set(["name", "email", "message", "_gotcha"]);
+    const extraLines = Object.keys(data)
+      .filter((key) => !knownFields.has(key) && String(data[key]).trim())
+      .map((key) => `${key}: ${String(data[key]).trim().slice(0, 500)}`);
+
+    const bodyText = [`Nombre: ${name}`, `Email: ${email}`]
+      .concat(extraLines)
+      .concat(["", message])
+      .join("\n");
+
     const resendResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -89,7 +102,7 @@ export default {
         to: client.to,
         reply_to: email,
         subject: `Nuevo mensaje de contacto — ${client.label}`,
-        text: `Nombre: ${name}\nEmail: ${email}\n\n${message}`,
+        text: bodyText,
       }),
     });
 
