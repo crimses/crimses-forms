@@ -11,6 +11,10 @@
 const CLIENTS = {
   "https://crimses.com": { to: "ccrimses@gmail.com", label: "CRIMSES" },
   "https://www.crimses.com": { to: "ccrimses@gmail.com", label: "CRIMSES" },
+  // Preview de develop de crimses-web — permite probar el formulario antes
+  // de mergear a main, sin tocar el dominio real. Sumar el mismo tipo de
+  // entrada (develop.<proyecto>.pages.dev) para cada sitio de cliente nuevo.
+  "https://develop.crimses-web.pages.dev": { to: "ccrimses@gmail.com", label: "CRIMSES (preview)" },
   // Próximo cliente: agregar acá su origen real y su mail de destino.
 };
 
