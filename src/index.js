@@ -18,6 +18,20 @@ const CLIENTS = {
   // Próximo cliente: agregar acá su origen real y su mail de destino.
 };
 
+// Etiquetas lindas para campos conocidos de formularios (además de
+// name/email/message). Un campo que no esté acá igual se manda, solo que
+// con su nombre técnico capitalizado en vez de una etiqueta a medida.
+const FIELD_LABELS = {
+  business: "Negocio",
+  phone: "Teléfono",
+  location: "Ubicación",
+};
+
+function labelFor(key) {
+  if (FIELD_LABELS[key]) return FIELD_LABELS[key];
+  return key.charAt(0).toUpperCase() + key.slice(1);
+}
+
 const FROM_ADDRESS = "formulario@crimses.com";
 
 function corsHeaders(origin) {
@@ -84,7 +98,7 @@ export default {
     const knownFields = new Set(["name", "email", "message", "_gotcha"]);
     const extraLines = Object.keys(data)
       .filter((key) => !knownFields.has(key) && String(data[key]).trim())
-      .map((key) => `${key}: ${String(data[key]).trim().slice(0, 500)}`);
+      .map((key) => `${labelFor(key)}: ${String(data[key]).trim().slice(0, 500)}`);
 
     const bodyText = [`Nombre: ${name}`, `Email: ${email}`]
       .concat(extraLines)
